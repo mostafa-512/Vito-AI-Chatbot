@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Chat from './components/Chat/Chat.jsx';
 import { Controls } from './components/Chat/Controls/Controls.jsx';
 
-import { Assistant } from './assistants/googleAi.js';
+// import { Assistant } from './assistants/googleAi.js';
 
+import { Assistant } from './assistants/openAi.js';
 
 
 function App() {
@@ -22,7 +23,7 @@ function addMessage(message) {
  async function handleContentRise(content) {
 addMessage({role:'user',content})
   try {
-    const result = await assistant.chat(content);
+    const result = await assistant.chat(content,messages);
       addMessage({role:'assistant',content:result})
     } catch (error) {
       addMessage({role:'system',content:"Sorry It's Look Like Something happened !!. Please Try Again !!"})

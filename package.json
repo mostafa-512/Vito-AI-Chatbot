@@ -12,6 +12,7 @@
   "dependencies": {
     "@google/genai": "^0.7.0",
     "@google/generative-ai": "^0.24.0",
+    "openai": "^4.93.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
