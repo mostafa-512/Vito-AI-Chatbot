@@ -4,19 +4,16 @@ import { useState } from 'react';
 import Chat from './components/Chat/Chat.jsx';
 import { Controls } from './components/Chat/Controls/Controls.jsx';
 
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Assistant } from './assistants/googleAi.js';
 
- const googleai = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_AI_API_KEY)
 
- const gemini = googleai.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-const chat = gemini.startChat({history:[]})
-
-console.log(gemini);
 
 function App() {
   const [messages, setMessages] = useState([]);
-
+  // if you want to chose the model you can type the model name in the Brackets between double  quotes but the default model is "gemini-1.5-flash"
+  // for example if you want to use "gemini-1.5-flash" model you can do it like this
+  // const assistant = new Assistant("gemini-1.5-flash")
+  const assistant = new Assistant();
 function addMessage(message) {
   setMessages((prevMessages)=>[...prevMessages,message,]);
 
@@ -25,8 +22,8 @@ function addMessage(message) {
  async function handleContentRise(content) {
 addMessage({role:'user',content})
   try {
-      const result = await chat.sendMessage(content);
-      addMessage({role:'assistant',content:result.response.text()})
+    const result = await assistant.chat(content);
+      addMessage({role:'assistant',content:result})
     } catch (error) {
       addMessage({role:'system',content:"Sorry It's Look Like Something happened !!. Please Try Again !!"})
  
