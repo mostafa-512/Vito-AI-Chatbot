@@ -1,9 +1,21 @@
 import styles from './Controls.module.css';
-import { useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
 
 
-export function Controls({onSend}){
+export function Controls({isDisabled=false,onSend}){
   const [content, setContent] = useState("");
+
+  const textareaReef  = useRef(null);
+useEffect (() => {
+  if (!isDisabled) {
+    textareaReef.current.focus(); 
+    
+  }
+}
+
+,[isDisabled])
+
   function handleTextarea(event) {
     setContent(event.target.value);
   }
@@ -23,16 +35,24 @@ export function Controls({onSend}){
       }
     return(
         <div className={styles.Controls}>
-            <div className={styles.TextAreaContainer}>
-                <textarea placeholder="Message Vito Chatbot"
+            <div className={styles.TextAreaContainer }>
+                <TextareaAutosize  placeholder="Message Vito Chatbot"
                  className={styles.TextArea}
                  value={content}
                  onChange={handleTextarea} 
                  onKeyDown={HitEnter}
+                 minRows={1}
+                 maxRows={4}
+                 disabled={isDisabled}
+                 ref={textareaReef}
+      
                  />
             </div>
 
-            <button className={styles.Button} onClick={handleContentSend}>
+            <button className={styles.Button}
+             onClick={handleContentSend}
+             disabled={isDisabled}
+             >
               <SendIcon/>
               </button>
         </div>

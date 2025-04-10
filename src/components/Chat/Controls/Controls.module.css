@@ -32,6 +32,7 @@
   border-radius: 50%;
   outline: none;
   background: light-dark(#0d0d0d, #ececec);
+  cursor: pointer;
 }
 
 .Button svg {
@@ -41,4 +42,5 @@
 .TextArea:disabled,
 .Button:disabled {
   opacity: 0.35;
+  cursor: unset;
 }

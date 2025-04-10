@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { use, useEffect } from 'react';
 import styles from './App.module.css';
 import { useState } from 'react';
 import Chat from './components/Chat/Chat.jsx';
@@ -12,6 +12,7 @@ import { Assistant } from './assistants/openAi.js';
 
 
 function App() {
+
   const [messages, setMessages] = useState([]);
   // if you want to chose the model you can type the model name in the Brackets between double  quotes but the default model is "gemini-1.5-flash"
   // for example if you want to use "gemini-1.5-flash" model you can do it like this
@@ -24,8 +25,12 @@ function App() {
   const  [isLoading , setIsLoading] = useState(false);
   useEffect( () => {
     setIsLoading(true)
-      setInterval(() => {setIsLoading(false)},1000 )
-  },)
+    // Simulate a delay for loading state
+    const timer = setTimeout(() => {setIsLoading(false)},1000 );
+    return () => clearTimeout(timer);
+  },[])
+
+
 
  async function handleContentRise(content) {
 addMessage({role:'user',content})
@@ -41,6 +46,8 @@ setIsLoading(true);
     }
   }
 
+
+
   return (
     <>
   <div className={styles.App}>
@@ -52,7 +59,7 @@ setIsLoading(true);
     <div className={styles.ChatContainer} >
       <Chat messages={messages} />
     </div>
-    <Controls onSend={handleContentRise} />
+    <Controls isDisabled={isLoading} onSend={handleContentRise} />
     </div>      
     </>
   )
