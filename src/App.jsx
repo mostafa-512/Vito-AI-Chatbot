@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './App.module.css';
 import { useState } from 'react';
 import Chat from './components/Chat/Chat.jsx';
 import { Controls } from './components/Chat/Controls/Controls.jsx';
+
+import { Loader } from './components/Loader/Loader.jsx';
 
 // import { Assistant } from './assistants/googleAi.js';
 
@@ -15,24 +17,34 @@ function App() {
   // for example if you want to use "gemini-1.5-flash" model you can do it like this
   // const assistant = new Assistant("gemini-1.5-flash")
   const assistant = new Assistant();
-function addMessage(message) {
-  setMessages((prevMessages)=>[...prevMessages,message,]);
-
-}
+  function addMessage(message) {
+    setMessages((prevMessages)=>[...prevMessages,message,]);
+  }
+  
+  const  [isLoading , setIsLoading] = useState(false);
+  useEffect( () => {
+    setIsLoading(true)
+      setInterval(() => {setIsLoading(false)},1000 )
+  },)
 
  async function handleContentRise(content) {
 addMessage({role:'user',content})
+setIsLoading(true);
   try {
     const result = await assistant.chat(content,messages);
       addMessage({role:'assistant',content:result})
     } catch (error) {
       addMessage({role:'system',content:"Sorry It's Look Like Something happened !!. Please Try Again !!"})
  
+    }finally {
+      setIsLoading(false);
     }
   }
+
   return (
     <>
   <div className={styles.App}>
+{isLoading &&  <Loader/>}
     <header className={styles.Header}>
     <img src="/v.png" alt="Vito-AI-Logo" className={styles.Logo} />   
     <h2 className={styles.Title}>Vito AI Chatbot</h2>
