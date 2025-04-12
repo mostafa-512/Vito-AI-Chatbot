@@ -25,7 +25,10 @@ function Chat({messages}) {
       },[])
   ,[messages])
   useEffect(()=>{
-    divToEndOfChat.current?.scrollIntoView({ behavior: 'smooth' });
+    const lastMessage = messages[messages.length -1];
+    if (lastMessage?.role === 'user'){
+      divToEndOfChat.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   },[messages])
 
 

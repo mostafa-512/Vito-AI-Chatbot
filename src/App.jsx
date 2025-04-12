@@ -1,14 +1,13 @@
-import React, { use, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './App.module.css';
-import { useState } from 'react';
 import Chat from './components/Chat/Chat.jsx';
 import { Controls } from './components/Chat/Controls/Controls.jsx';
 
 import { Loader } from './components/Loader/Loader.jsx';
 
-// import { Assistant } from './assistants/googleAi.js';
+import { Assistant } from './assistants/googleAi.js';
 
-import { Assistant } from './assistants/openAi.js';
+// import { Assistant } from './assistants/openAi.js';
 
 
 function App() {
@@ -23,6 +22,9 @@ function App() {
   }
   
   const  [isLoading , setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+
+
   useEffect( () => {
     setIsLoading(true)
     // Simulate a delay for loading state
@@ -31,21 +33,36 @@ function App() {
   },[])
 
 
+  function updateLastMessageContent(content) {
+  setMessages((prevMessages) => prevMessages.map((messages, index) => index === prevMessages.length -1 ? {...messages, content:`${messages.content}${content}`} : messages));      
+  }
+
 
  async function handleContentRise(content) {
 addMessage({role:'user',content})
 setIsLoading(true);
   try {
-    const result = await assistant.chat(content,messages);
-      addMessage({role:'assistant',content:result})
-    } catch (error) {
+    const result = await assistant.chatStream(content);
+    let isFirstChunk = false;
+
+    for await (const chunk of result) {
+      if (!isFirstChunk) {
+        isFirstChunk = true;
+        addMessage({content:"",role:'assistant'});
+        setIsLoading(false);
+        setIsStreaming(true);
+      }
+      updateLastMessageContent(chunk);
+    // addMessage({role:'assistant',content:chunk});
+    }
+    setIsStreaming(false);
+  } catch (error) {
       addMessage({role:'system',content:"Sorry It's Look Like Something happened !!. Please Try Again !!"})
  
-    }finally {
       setIsLoading(false);
+      setIsStreaming(false);
     }
   }
-
 
 
   return (
@@ -59,7 +76,7 @@ setIsLoading(true);
     <div className={styles.ChatContainer} >
       <Chat messages={messages} />
     </div>
-    <Controls isDisabled={isLoading} onSend={handleContentRise} />
+    <Controls isDisabled={isLoading || isStreaming} onSend={handleContentRise} />
     </div>      
     </>
   )
