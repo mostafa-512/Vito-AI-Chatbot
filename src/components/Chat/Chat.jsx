@@ -15,20 +15,24 @@ const WELCOME_MESSAGE_Group = [
 
 function Chat({messages}) {
   const divToEndOfChat = useRef(null);
-  const messageGroup = useMemo(()=>
+  const messageGroup = useMemo(
+    ()=>
+    // Group the messages by user and assistant
     messages.reduce((groups,messages)=>{
       if(messages.role === 'user') groups.push([]);
-      groups[groups.length-1].push(messages);
+      groups[groups.length -1].push(messages);
       return groups;
       },[])
   ,[messages])
   useEffect(()=>{
     divToEndOfChat.current?.scrollIntoView({ behavior: 'smooth' });
   },[messages])
+
+
   return (
 <>
 <div className={styles.Chat}>
-{[WELCOME_MESSAGE_Group,...messageGroup].map((messages,groupIndex)=>{
+{[WELCOME_MESSAGE_Group, ...messageGroup].map((messages,groupIndex)=>(
   // Group the messages by user and assistant
   // Group the messages by user and assistant
   <div key={groupIndex} className={styles.Group}>
@@ -42,7 +46,7 @@ function Chat({messages}) {
     ))}
 
   </div>
-}) }
+)) }
 
 <div  ref={divToEndOfChat}/>
 </div>
