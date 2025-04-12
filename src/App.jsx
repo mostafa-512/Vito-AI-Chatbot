@@ -5,9 +5,9 @@ import { Controls } from './components/Chat/Controls/Controls.jsx';
 
 import { Loader } from './components/Loader/Loader.jsx';
 
-import { Assistant } from './assistants/googleAi.js';
+// import { Assistant } from './assistants/googleAi.js';
 
-// import { Assistant } from './assistants/openAi.js';
+import { Assistant } from './assistants/openAi.js';
 
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
 addMessage({role:'user',content})
 setIsLoading(true);
   try {
-    const result = await assistant.chatStream(content);
+    const result = await assistant.chatStream(content,messages);
     let isFirstChunk = false;
 
     for await (const chunk of result) {
