@@ -7,12 +7,14 @@ const openai = new OpenAI({
 export class Assistant {
 
     #model; // to save the Var from any call outside the class
-    constructor(model="gpt-4o-mini"){
+    #client; // to save the Var from any call outside the class
+    constructor(model="gpt-4o-mini", client= openai){
         this.#model = model;
+        this.#client = client;
     }
     async chat(content,history){
         try {
-            const result = await openai.chat.completions.create({
+            const result = await this.#client.chat.completions.create({
                 model: this.#model,
                 messages: [
                     ...history,{role:'user',content}]

@@ -5,9 +5,10 @@ import { Controls } from './components/Chat/Controls/Controls.jsx';
 
 import { Loader } from './components/Loader/Loader.jsx';
 
-// import { Assistant } from './assistants/googleAi.js';
+import { Assistant } from './assistants/googleAi.js';
 
-import { Assistant } from './assistants/openAi.js';
+// import { Assistant } from './assistants/openAi.js';
+// import { Assistant } from './assistants/deepSeekAi.js';
 
 
 function App() {
