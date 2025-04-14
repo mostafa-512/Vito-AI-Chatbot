@@ -7,8 +7,8 @@ import { Loader } from './components/Loader/Loader.jsx';
 
 // uncomment the assistant you want to use and comment the others
 
-// import { Assistant } from './assistants/googleAi.js';
-import { Assistant } from './assistants/openAi.js';
+import { Assistant } from './assistants/googleAi.js';
+// import { Assistant } from './assistants/openAi.js';
 // import { Assistant } from './assistants/deepSeekAi.js';
 
 
