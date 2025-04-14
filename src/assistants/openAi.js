@@ -1,6 +1,12 @@
 import OpenAI from "openai";
+
+// "sk-01010101"  for just make project preview, you need to add your own key in the .env file
+// and import it by using      import.meta.env.VITE_Open_AI_API_KEY  as a value to  apiKey : >>
+//  import.meta.env.VITE_OPENAI_API_KEY
+// and make sure to add the .env file in the root directory of your project
+
 const openai = new OpenAI({
-    apiKey: import.meta.env.VITE_Open_AI_API_KEY,
+    apiKey:  "sk-01010101" , // 
     dangerouslyAllowBrowser:true
 })
 
