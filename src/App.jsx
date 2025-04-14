@@ -5,9 +5,10 @@ import { Controls } from './components/Chat/Controls/Controls.jsx';
 
 import { Loader } from './components/Loader/Loader.jsx';
 
-import { Assistant } from './assistants/googleAi.js';
+// uncomment the assistant you want to use and comment the others
 
-// import { Assistant } from './assistants/openAi.js';
+// import { Assistant } from './assistants/googleAi.js';
+import { Assistant } from './assistants/openAi.js';
 // import { Assistant } from './assistants/deepSeekAi.js';
 
 
@@ -19,47 +20,47 @@ function App() {
   // const assistant = new Assistant("gemini-1.5-flash")
   const assistant = new Assistant();
   function addMessage(message) {
-    setMessages((prevMessages)=>[...prevMessages,message,]);
+    setMessages((prevMessages) => [...prevMessages, message,]);
   }
-  
-  const  [isLoading , setIsLoading] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
 
-  useEffect( () => {
+  useEffect(() => {
     setIsLoading(true)
     // Simulate a delay for loading state
-    const timer = setTimeout(() => {setIsLoading(false)},1000 );
+    const timer = setTimeout(() => { setIsLoading(false) }, 1000);
     return () => clearTimeout(timer);
-  },[])
+  }, [])
 
 
   function updateLastMessageContent(content) {
-  setMessages((prevMessages) => prevMessages.map((messages, index) => index === prevMessages.length -1 ? {...messages, content:`${messages.content}${content}`} : messages));      
+    setMessages((prevMessages) => prevMessages.map((messages, index) => index === prevMessages.length - 1 ? { ...messages, content: `${messages.content}${content}` } : messages));
   }
 
 
- async function handleContentRise(content) {
-addMessage({role:'user',content})
-setIsLoading(true);
-  try {
-    const result = await assistant.chatStream(content,messages);
-    let isFirstChunk = false;
+  async function handleContentRise(content) {
+    addMessage({ role: 'user', content })
+    setIsLoading(true);
+    try {
+      const result = await assistant.chatStream(content, messages);
+      let isFirstChunk = false;
 
-    for await (const chunk of result) {
-      if (!isFirstChunk) {
-        isFirstChunk = true;
-        addMessage({content:"",role:'assistant'});
-        setIsLoading(false);
-        setIsStreaming(true);
+      for await (const chunk of result) {
+        if (!isFirstChunk) {
+          isFirstChunk = true;
+          addMessage({ content: "", role: 'assistant' });
+          setIsLoading(false);
+          setIsStreaming(true);
+        }
+        updateLastMessageContent(chunk);
+        // addMessage({role:'assistant',content:chunk});
       }
-      updateLastMessageContent(chunk);
-    // addMessage({role:'assistant',content:chunk});
-    }
-    setIsStreaming(false);
-  } catch (error) {
-      addMessage({role:'system',content:"Sorry It's Look Like Something happened !!. Please Try Again !!"})
- 
+      setIsStreaming(false);
+    } catch (error) {
+      addMessage({ role: 'system', content: "Sorry It's Look Like Something happened !!. Please Try Again !!" })
+
       setIsLoading(false);
       setIsStreaming(false);
     }
@@ -68,17 +69,17 @@ setIsLoading(true);
 
   return (
     <>
-  <div className={styles.App}>
-{isLoading &&  <Loader/>}
-    <header className={styles.Header}>
-    <img src="/v.png" alt="Vito-AI-Logo" className={styles.Logo} />   
-    <h2 className={styles.Title}>Vito AI Chatbot</h2>
-    </header>
-    <div className={styles.ChatContainer} >
-      <Chat messages={messages} />
-    </div>
-    <Controls isDisabled={isLoading || isStreaming} onSend={handleContentRise} />
-    </div>      
+      <div className={styles.App}>
+        {isLoading && <Loader />}
+        <header className={styles.Header}>
+          <img src="/v.png" alt="Vito-AI-Logo" className={styles.Logo} />
+          <h2 className={styles.Title}>Vito AI Chatbot</h2>
+        </header>
+        <div className={styles.ChatContainer} >
+          <Chat messages={messages} />
+        </div>
+        <Controls isDisabled={isLoading || isStreaming} onSend={handleContentRise} />
+      </div>
     </>
   )
 }

@@ -28,7 +28,7 @@ export class Assistant {
 
     async *chatStream(content,history){
         try {
-            const result = await openai.chat.completions.create({
+            const result = await this.#client.chat.completions.create({
                 model: this.#model,
                 messages: [
                     ...history,{role:'user',content}]
