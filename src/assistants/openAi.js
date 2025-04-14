@@ -6,7 +6,7 @@ import OpenAI from "openai";
 // and make sure to add the .env file in the root directory of your project
 
 const openai = new OpenAI({
-    apiKey:  "sk-01010101" , // 
+    apiKey:  import.meta.env.VITE_Open_AI_API_KEY , // 
     dangerouslyAllowBrowser:true
 })
 
